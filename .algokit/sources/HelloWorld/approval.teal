@@ -1,0 +1,111 @@
+#pragma version 10
+#pragma typetrack false
+
+
+main:
+    bytecblock "github"
+
+
+    txn NumAppArgs
+    bz main_bare_routing@7
+    pushbytess 0x02bece11 0x1f9cca3d
+    txna ApplicationArgs 0
+    match main_hello_route@3 main_deposit_route@4
+
+main_after_if_else@11:
+
+
+    pushint 0
+    return
+
+main_deposit_route@4:
+
+
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    assert
+
+
+    txna ApplicationArgs 1
+    extract 2 0
+
+
+    callsub deposit
+    pushint 1
+    return
+
+main_hello_route@3:
+
+
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    assert
+
+
+    txna ApplicationArgs 1
+    extract 2 0
+
+
+    callsub hello
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    pushbytes 0x151f7c75
+    swap
+    concat
+    log
+    pushint 1
+    return
+
+main_bare_routing@7:
+
+
+    txn OnCompletion
+    bnz main_after_if_else@11
+    txn ApplicationID
+    !
+    assert
+    pushint 1
+    return
+
+
+
+hello:
+
+
+    proto 1 1
+
+
+    pushbytes "Hello, "
+    frame_dig -1
+    concat
+    retsub
+
+
+
+deposit:
+
+
+    proto 1 0
+
+
+    bytec_0
+
+
+    box_del
+    pop
+
+
+    bytec_0
+
+
+    frame_dig -1
+    box_put
+    retsub
