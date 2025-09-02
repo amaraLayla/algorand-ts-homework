@@ -1,0 +1,111 @@
+#pragma version 10
+#pragma typetrack false
+
+// @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
+main:
+    bytecblock "github"
+    // smart_contracts/hello_world/contract.algo.ts:3
+    // export class HelloWorld extends Contract {
+    txn NumAppArgs
+    bz main_bare_routing@7
+    pushbytess 0x02bece11 0x1f9cca3d // method "hello(string)string", method "deposit(string)void"
+    txna ApplicationArgs 0
+    match main_hello_route@3 main_deposit_route@4
+
+main_after_if_else@11:
+    // smart_contracts/hello_world/contract.algo.ts:3
+    // export class HelloWorld extends Contract {
+    pushint 0 // 0
+    return
+
+main_deposit_route@4:
+    // smart_contracts/hello_world/contract.algo.ts:10
+    // deposit(github: string): void {
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/hello_world/contract.algo.ts:3
+    // export class HelloWorld extends Contract {
+    txna ApplicationArgs 1
+    extract 2 0
+    // smart_contracts/hello_world/contract.algo.ts:10
+    // deposit(github: string): void {
+    callsub deposit
+    pushint 1 // 1
+    return
+
+main_hello_route@3:
+    // smart_contracts/hello_world/contract.algo.ts:6
+    // hello(name: string): string {
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/hello_world/contract.algo.ts:3
+    // export class HelloWorld extends Contract {
+    txna ApplicationArgs 1
+    extract 2 0
+    // smart_contracts/hello_world/contract.algo.ts:6
+    // hello(name: string): string {
+    callsub hello
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    pushbytes 0x151f7c75
+    swap
+    concat
+    log
+    pushint 1 // 1
+    return
+
+main_bare_routing@7:
+    // smart_contracts/hello_world/contract.algo.ts:3
+    // export class HelloWorld extends Contract {
+    txn OnCompletion
+    bnz main_after_if_else@11
+    txn ApplicationID
+    !
+    assert // can only call when creating
+    pushint 1 // 1
+    return
+
+
+// smart_contracts/hello_world/contract.algo.ts::HelloWorld.hello(name: bytes) -> bytes:
+hello:
+    // smart_contracts/hello_world/contract.algo.ts:6
+    // hello(name: string): string {
+    proto 1 1
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // return `Hello, ${name}`;
+    pushbytes "Hello, "
+    frame_dig -1
+    concat
+    retsub
+
+
+// smart_contracts/hello_world/contract.algo.ts::HelloWorld.deposit(github: bytes) -> void:
+deposit:
+    // smart_contracts/hello_world/contract.algo.ts:10
+    // deposit(github: string): void {
+    proto 1 0
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // boxGithub = Box<string>({ key: 'github' });
+    bytec_0 // "github"
+    // smart_contracts/hello_world/contract.algo.ts:11
+    // this.boxGithub.value = github;
+    box_del
+    pop
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // boxGithub = Box<string>({ key: 'github' });
+    bytec_0 // "github"
+    // smart_contracts/hello_world/contract.algo.ts:11
+    // this.boxGithub.value = github;
+    frame_dig -1
+    box_put
+    retsub
