@@ -42,3 +42,7 @@ ci-teal-diff = { commands = [
   'git add -N ./smart_contracts/artifacts',
   'git diff --exit-code --minimal ./smart_contracts/artifacts',
 ], description = 'Check TEAL files for differences' }
+
+[environments.testnet]
+algod_url = "https://testnet-api.algonode.network"
+indexer_url = "https://testnet-idx.algonode.network"

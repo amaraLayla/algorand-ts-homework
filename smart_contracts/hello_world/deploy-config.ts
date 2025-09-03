@@ -4,9 +4,21 @@ import { HelloWorldFactory } from '../artifacts/hello_world/HelloWorldClient';
 async function deploy() {
   console.log('=== Deploying HelloWorld ===');
 
-  const algorand = AlgorandClient.fromEnvironment();
+  const algorand = AlgorandClient.fromConfig({
+    algodConfig: {
+      server: 'https://testnet-api.algonode.network',
+      port: '',
+      token: '',
+    },
+    indexerConfig: {
+      server: 'https://testnet-idx.algonode.network',
+      port: '',
+      token: '',
+    },
+  });
+
   const deployer = algorand.account.fromMnemonic(
-    "boost noodle rice love ranch sauce palm bright peasant feel toe trap cheap message fabric diagram wasp tail empower saddle cruise blue since abstract proud"
+    "junk frame cram pattern midnight include rice morning spoil family bright detect immune absent ugly acid seek busy hazard gift choice enrich camp absorb duty"
   );
 
   const factory = algorand.client.getTypedAppFactory(HelloWorldFactory, {
@@ -31,15 +43,14 @@ async function deploy() {
   });
 
   await appClient.send.deposit({
-    args: { github: 'Edda-Ignite' },
+    args: { github: 'olivestrings' },
   });
 
-  console.log(`✅ Stored GitHub handle 'Edda-Ignite' in box 'github'`);
+  console.log(`✅ Stored GitHub handle 'olivestrings' in box 'github'`);
   console.log(`✅ Called hello with name = world, received: ${response.return}`);
   console.log(`✅ Deployed HelloWorld with App ID: ${appClient.appId}`);
 }
 
-// ✅ Call the function outside its definition
 deploy().catch((err) => {
   console.error('Deployment failed:', err);
 });
