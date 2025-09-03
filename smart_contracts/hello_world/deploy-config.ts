@@ -18,7 +18,7 @@ async function deploy() {
   });
 
   const deployer = algorand.account.fromMnemonic(
-    "junk frame cram pattern midnight include rice morning spoil family bright detect immune absent ugly acid seek busy hazard gift choice enrich camp absorb duty"
+    "smooth car invite baby clown bone hurdle tower flavor purpose cover furnace defy beef avoid unable slide dynamic group coin lift stem title ability leopard"
   );
 
   const factory = algorand.client.getTypedAppFactory(HelloWorldFactory, {
